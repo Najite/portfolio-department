@@ -31,7 +31,7 @@ const Header = () => {
               Research
             </Link>
             <Link to="/lecturers" className="text-foreground hover:text-primary transition-colors">
-              Faculty
+              History
             </Link>
             <Link to="/projects" className="text-foreground hover:text-primary transition-colors">
               Projects
@@ -96,7 +96,7 @@ const Header = () => {
                 className="text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Faculty
+                History
               </Link>
               <Link 
                 to="/projects" 

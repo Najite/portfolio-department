@@ -35,31 +35,31 @@ const Lecturers = () => {
             Our Faculty
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Meet our distinguished faculty members who are leading research and innovation in computer science
+           Computer Science Department was founded in 2008 with a mission to advance the field of computing through research and education. The first NACOS President was Comrade Femi.
           </p>
         </div>
 
         {/* Stats Section */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <Card className="text-center">
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-primary mb-2">{lecturers?.length || 0}</div>
-              <div className="text-muted-foreground">Faculty Members</div>
-            </CardContent>
-          </Card>
-          <Card className="text-center">
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-primary mb-2">15+</div>
-              <div className="text-muted-foreground">Research Areas</div>
-            </CardContent>
-          </Card>
-          <Card className="text-center">
-            <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-primary mb-2">100+</div>
-              <div className="text-muted-foreground">Publications</div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* <div className="grid md:grid-cols-3 gap-8 mb-16"> */}
+          {/* <Card className="text-center"> */}
+            {/* <CardContent className="pt-6"> */}
+              {/* <div className="text-3xl font-bold text-primary mb-2">{lecturers?.length || 0}</div> */}
+              {/* <div className="text-muted-foreground">Faculty Members</div> */}
+            {/* </CardContent> */}
+          {/* </Card> */}
+          {/* <Card className="text-center"> */}
+            {/* <CardContent className="pt-6"> */}
+              {/* <div className="text-3xl font-bold text-primary mb-2">15+</div> */}
+              {/* <div className="text-muted-foreground">Research Areas</div> */}
+            {/* </CardContent> */}
+          {/* </Card> */}
+          {/* <Card className="text-center"> */}
+            {/* <CardContent className="pt-6"> */}
+              {/* <div className="text-3xl font-bold text-primary mb-2">100+</div> */}
+              {/* <div className="text-muted-foreground">Publications</div> */}
+            {/* </CardContent> */}
+          {/* </Card> */}
+        {/* </div> */}
 
         {/* Faculty Grid */}
         {isLoading ? (

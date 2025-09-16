@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Users, BookOpen, Lightbulb, Github, ExternalLink } from 'lucide-react';
-import heroImage from '@/assets/hero-cs-department.jpg';
+import heroImage from '@/assets/NNL.png';
 import Header from '@/components/layout/Header';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -99,13 +99,13 @@ const Index = () => {
             </div>
             
             <div className="relative">
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+              <div className="relative overflow-hidden rounded-2xl ">
                 <img 
                   src={heroImage} 
                   alt="Computer Science Department" 
-                  className="w-full h-[500px] object-cover"
+                  className="w-full h-[500px] object-fit"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div>
+                {/* <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"></div> */}
               </div>
             </div>
           </div>
