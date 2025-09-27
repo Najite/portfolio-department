@@ -295,7 +295,9 @@ const AdminDashboard = () => {
                     <div>
                       <CardTitle className="mb-2">{user.display_name || 'No name'}</CardTitle>
                       <CardDescription>
-                        {user.email} • Joined {new Date(user.created_at).toLocaleDateString()}
+                        {user.email}
+                        {user.matric_number && ` • Matric: ${user.matric_number}`}
+                        • Joined {new Date(user.created_at).toLocaleDateString()}
                       </CardDescription>
                     </div>
                     <div className="flex flex-col gap-2">
