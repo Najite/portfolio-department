@@ -102,6 +102,8 @@ const StudentDashboard = () => {
           user_id: user.id,
           display_name: data.display_name,
           matric_number: data.matric_number,
+        }, {
+          onConflict: 'user_id'
         });
       
       if (error) throw error;
