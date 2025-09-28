@@ -36,6 +36,12 @@ const Header = () => {
             <Link to="/projects" className="text-foreground hover:text-primary transition-colors">
               Projects
             </Link>
+            <Link to="/gallery" className="text-foreground hover:text-primary transition-colors">
+              Gallery
+            </Link>
+            <Link to="/teams" className="text-foreground hover:text-primary transition-colors">
+              Teams
+            </Link>
           </nav>
 
           {/* Auth Section */}
@@ -104,6 +110,20 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Projects
+              </Link>
+              <Link 
+                to="/gallery" 
+                className="text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Gallery
+              </Link>
+              <Link 
+                to="/teams" 
+                className="text-foreground hover:text-primary transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Teams
               </Link>
               
               <div className="flex flex-col space-y-2 pt-4 border-t">
