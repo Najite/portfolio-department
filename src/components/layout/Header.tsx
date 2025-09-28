@@ -40,7 +40,7 @@ const Header = () => {
               Gallery
             </Link>
             <Link to="/teams" className="text-foreground hover:text-primary transition-colors">
-              Teams
+              Lecturers
             </Link>
           </nav>
 
