@@ -1,12 +1,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Mail, Globe, User, BookOpen, Users } from 'lucide-react';
+import { Mail, Globe, BookOpen, Users, Crown } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 const Lecturers = () => {
+  // Department leaders data
+  const leaders = [
+    { id: 1, name: "Prof. Dr. Michael Johnson", position: "Head of Department" },
+    { id: 2, name: "Dr. Sarah Williams", position: "Deputy Head of Department" },
+    { id: 3, name: "Prof. David Chen", position: "Director of Research" },
+    { id: 4, name: "Dr. Emily Rodriguez", position: "Director of Undergraduate Studies" },
+    { id: 5, name: "Prof. James Wilson", position: "Director of Graduate Studies" },
+    { id: 6, name: "Dr. Lisa Thompson", position: "Director of Industry Relations" },
+    { id: 7, name: "Prof. Robert Brown", position: "Chair of Curriculum Committee" },
+    { id: 8, name: "Dr. Maria Garcia", position: "Director of Student Affairs" },
+    { id: 9, name: "Prof. Andrew Davis", position: "Director of International Programs" },
+    { id: 10, name: "Dr. Jennifer Lee", position: "Director of Computing Labs" },
+    { id: 11, name: "Prof. Kevin Taylor", position: "Director of Academic Excellence" },
+    { id: 12, name: "Dr. Rachel Martinez", position: "Director of Faculty Development" },
+    { id: 13, name: "Prof. Thomas Anderson", position: "Director of Innovation Hub" },
+    { id: 14, name: "Dr. Amanda Clark", position: "Director of Quality Assurance" },
+    { id: 15, name: "Prof. Christopher Lee", position: "Director of External Relations" },
+    { id: 16, name: "Dr. Michelle White", position: "Director of Strategic Planning" }
+  ];
+
   // Fetch all lecturers with their research paper counts
   const { data: lecturers, isLoading } = useQuery({
     queryKey: ['lecturers'],
@@ -32,15 +52,64 @@ const Lecturers = () => {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-            Our Faculty
+            Department History
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
            Computer Science Department was founded in 2008 with a mission to advance the field of computing through research and education. The first NACOS President was Comrade Femi.
           </p>
         </div>
 
+        {/* Leaders Section */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
+              <Crown className="h-8 w-8 text-accent" />
+              Leaders
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Meet the distinguished leaders who guide our department's vision and strategic direction
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {leaders.map((leader) => (
+              <Card key={leader.id} className="hover:shadow-lg transition-all duration-300 group text-center">
+                <CardHeader className="pb-4">
+                  <div className="w-16 h-16 rounded-full mx-auto mb-4 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border-4 border-background shadow-lg group-hover:scale-105 transition-transform duration-300">
+                    <Crown className="w-8 h-8 text-primary" />
+                  </div>
+                  <CardTitle className="group-hover:text-primary transition-colors text-lg">
+                    {leader.name}
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    {leader.position}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
         {/* Stats Section */}
-        {/* <div className="grid md:grid-cols-3 gap-8 mb-16"> */}
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <Card className="text-center">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-primary mb-2">16</div>
+              <div className="text-muted-foreground">Department Leaders</div>
+            </CardContent>
+          </Card>
+          <Card className="text-center">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-primary mb-2">15+</div>
+              <div className="text-muted-foreground">Years of Excellence</div>
+            </CardContent>
+          </Card>
+          <Card className="text-center">
+            <CardContent className="pt-6">
+              <div className="text-3xl font-bold text-primary mb-2">500+</div>
+              <div className="text-muted-foreground">Graduates</div>
+            </CardContent>
+          </Card>
+        </div>
           {/* <Card className="text-center"> */}
             {/* <CardContent className="pt-6"> */}
               {/* <div className="text-3xl font-bold text-primary mb-2">{lecturers?.length || 0}</div> */}
