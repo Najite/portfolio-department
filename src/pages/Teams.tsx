@@ -49,7 +49,7 @@ const Teams = () => {
     },
     {
       id: 5,
-      name: "",
+      name: "Mr Triumph",
       role: "Research Fellow",
       specialization: "Human-Computer Interaction",
       image: "https://images.pexels.com/photos/3861961/pexels-photo-3861961.jpeg?auto=compress&cs=tinysrgb&w=400",
@@ -59,7 +59,7 @@ const Teams = () => {
     },
     {
       id: 6,
-      name: "Prof. James Wilson",
+      name: "Mr Elegbede",
       role: "Senior Lecturer",
       specialization: "Database Systems",
       image: "https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg?auto=compress&cs=tinysrgb&w=400",
@@ -69,7 +69,7 @@ const Teams = () => {
     },
     {
       id: 7,
-      name: "Dr. Maria Garcia",
+      name: "Dr. Lawal",
       role: "Assistant Professor",
       specialization: "Computer Graphics",
       image: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=400",
@@ -79,7 +79,7 @@ const Teams = () => {
     },
     {
       id: 8,
-      name: "Prof. Robert Brown",
+      name: "Mrs Adebayo",
       role: "Lecturer",
       specialization: "Algorithms",
       image: "https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=400",
@@ -87,46 +87,46 @@ const Teams = () => {
       website: "https://example.com",
       bio: "Algorithm specialist with expertise in optimization and computational complexity."
     },
-    {
-      id: 9,
-      name: "Dr. Jennifer Lee",
-      role: "Research Associate",
-      specialization: "Mobile Computing",
-      image: "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=400",
-      email: "jennifer.lee@university.edu",
-      website: "https://example.com",
-      bio: "Mobile computing researcher focusing on IoT and edge computing solutions."
-    },
-    {
-      id: 10,
-      name: "Prof. Andrew Davis",
-      role: "Senior Lecturer",
-      specialization: "Network Systems",
-      image: "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=400",
-      email: "andrew.davis@university.edu",
-      website: "https://example.com",
-      bio: "Network systems expert with focus on distributed computing and cloud architecture."
-    },
-    {
-      id: 11,
-      name: "Dr. Rachel Martinez",
-      role: "Assistant Professor",
-      specialization: "Bioinformatics",
-      image: "https://images.pexels.com/photos/1181354/pexels-photo-1181354.jpeg?auto=compress&cs=tinysrgb&w=400",
-      email: "rachel.martinez@university.edu",
-      website: "https://example.com",
-      bio: "Bioinformatics researcher applying computational methods to biological problems."
-    },
-    {
-      id: 12,
-      name: "Prof. Kevin Taylor",
-      role: "Lecturer",
-      specialization: "Programming Languages",
-      image: "https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg?auto=compress&cs=tinysrgb&w=400",
-      email: "kevin.taylor@university.edu",
-      website: "https://example.com",
-      bio: "Programming language designer with expertise in compiler construction and language theory."
-    }
+    // {
+    //   id: 9,
+    //   name: "Mr Odekunle",
+    //   role: "Research Associate",
+    //   specialization: "Mobile Computing",
+    //   image: "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=400",
+    //   email: "jennifer.lee@university.edu",
+    //   website: "https://example.com",
+    //   bio: "Mobile computing researcher focusing on IoT and edge computing solutions."
+    // },
+    // {
+    //   id: 10,
+    //   name: "Prof. Andrew Davis",
+    //   role: "Senior Lecturer",
+    //   specialization: "Network Systems",
+    //   image: "https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=400",
+    //   email: "andrew.davis@university.edu",
+    //   website: "https://example.com",
+    //   bio: "Network systems expert with focus on distributed computing and cloud architecture."
+    // },
+    // {
+    //   id: 11,
+    //   name: "Dr. Rachel Martinez",
+    //   role: "Assistant Professor",
+    //   specialization: "Bioinformatics",
+    //   image: "https://images.pexels.com/photos/1181354/pexels-photo-1181354.jpeg?auto=compress&cs=tinysrgb&w=400",
+    //   email: "rachel.martinez@university.edu",
+    //   website: "https://example.com",
+    //   bio: "Bioinformatics researcher applying computational methods to biological problems."
+    // },
+    // {
+    //   id: 12,
+    //   name: "Prof. Kevin Taylor",
+    //   role: "Lecturer",
+    //   specialization: "Programming Languages",
+    //   image: "https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg?auto=compress&cs=tinysrgb&w=400",
+    //   email: "kevin.taylor@university.edu",
+    //   website: "https://example.com",
+    //   bio: "Programming language designer with expertise in compiler construction and language theory."
+    // }
   ];
 
   return (
@@ -149,7 +149,7 @@ const Teams = () => {
         <div className="grid md:grid-cols-4 gap-6 mb-16">
           <Card className="text-center">
             <CardContent className="pt-6">
-              <div className="text-3xl font-bold text-primary mb-2">12</div>
+              <div className="text-3xl font-bold text-primary mb-2">12+</div>
               <div className="text-muted-foreground">Faculty Members</div>
             </CardContent>
           </Card>
