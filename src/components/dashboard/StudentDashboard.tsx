@@ -42,9 +42,9 @@ const StudentDashboard = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
+        .maybeSingle();
+
+      if (error) throw error;
       return data;
     },
     enabled: !!user,
@@ -130,21 +130,21 @@ const StudentDashboard = () => {
   const uploadPaperMutation = useMutation({
     mutationFn: async (data: typeof paperData) => {
       if (!user) throw new Error('User not authenticated');
-      
+
       const { error } = await supabase
         .from('student_papers')
         .insert({
           user_id: user.id,
           title: data.title,
           abstract: data.abstract,
-          authors: data.authors.split(',').map(a => a.trim()),
-          keywords: data.keywords.split(',').map(k => k.trim()),
-          journal_or_conference: data.journal_or_conference,
+          authors: data.authors.split(',').map(a => a.trim()).filter(a => a),
+          keywords: data.keywords.split(',').map(k => k.trim()).filter(k => k),
+          journal_or_conference: data.journal_or_conference || null,
           publication_date: data.publication_date || null,
           supervisor_id: data.supervisor_id || null,
           approval_status: 'pending',
         });
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -163,6 +163,13 @@ const StudentDashboard = () => {
       });
       setShowPaperForm(false);
       queryClient.invalidateQueries({ queryKey: ['student-papers'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error submitting paper",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 

@@ -46,9 +46,9 @@ const LecturerDashboard = () => {
         .from('lecturers')
         .select('*')
         .eq('user_id', user.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') throw error;
+        .maybeSingle();
+
+      if (error) throw error;
       return data;
     },
     enabled: !!user,
@@ -90,21 +90,21 @@ const LecturerDashboard = () => {
   // Upload research paper mutation
   const uploadPaperMutation = useMutation({
     mutationFn: async (data: typeof paperData) => {
-      if (!user || !profile) throw new Error('User not authenticated');
-      
+      if (!user || !profile) throw new Error('User not authenticated or profile not found');
+
       const { error } = await supabase
         .from('research_papers')
         .insert({
           lecturer_id: profile.id,
           title: data.title,
           abstract: data.abstract,
-          authors: data.authors.split(',').map(a => a.trim()),
-          keywords: data.keywords.split(',').map(k => k.trim()),
-          journal_or_conference: data.journal_or_conference,
+          authors: data.authors.split(',').map(a => a.trim()).filter(a => a),
+          keywords: data.keywords.split(',').map(k => k.trim()).filter(k => k),
+          journal_or_conference: data.journal_or_conference || null,
           publication_date: data.publication_date || null,
           approval_status: 'pending',
         });
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -123,26 +123,33 @@ const LecturerDashboard = () => {
       setShowPaperForm(false);
       queryClient.invalidateQueries({ queryKey: ['lecturer-papers'] });
     },
+    onError: (error: any) => {
+      toast({
+        title: "Error submitting paper",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   // Upload project mutation
   const uploadProjectMutation = useMutation({
     mutationFn: async (data: typeof projectData) => {
       if (!user) throw new Error('User not authenticated');
-      
+
       const { error } = await supabase
         .from('department_projects')
         .insert({
           title: data.title,
           description: data.description,
-          technologies: data.technologies.split(',').map(t => t.trim()),
-          team_members: data.team_members.split(',').map(m => m.trim()),
+          technologies: data.technologies.split(',').map(t => t.trim()).filter(t => t),
+          team_members: data.team_members.split(',').map(m => m.trim()).filter(m => m),
           github_url: data.github_url || null,
           project_url: data.project_url || null,
           start_date: data.start_date || null,
           approval_status: 'pending',
         });
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -162,6 +169,13 @@ const LecturerDashboard = () => {
       setShowProjectForm(false);
       queryClient.invalidateQueries({ queryKey: ['lecturer-projects'] });
     },
+    onError: (error: any) => {
+      toast({
+        title: "Error submitting project",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
   });
 
   const getStatusBadge = (status: string) => {
@@ -176,6 +190,22 @@ const LecturerDashboard = () => {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
+
+  if (!profile) {
+    return (
+      <div className="space-y-6">
+        <Card className="text-center py-12">
+          <CardContent>
+            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Lecturer Profile Not Found</h3>
+            <p className="text-muted-foreground">
+              Your lecturer profile hasn't been created yet. Please contact the administrator.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
