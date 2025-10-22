@@ -174,17 +174,48 @@ const AdminDashboard = () => {
         .select('*')
         .eq('user_id', userId)
         .eq('role', role)
-        .single();
+        .maybeSingle();
 
       if (existingRole) {
         throw new Error('User already has this role');
       }
 
-      const { error } = await supabase
+      // Insert the role
+      const { error: roleError } = await supabase
         .from('user_roles')
         .insert({ user_id: userId, role });
-      
-      if (error) throw error;
+
+      if (roleError) throw roleError;
+
+      // If assigning lecturer role, create a lecturer profile
+      if (role === 'lecturer') {
+        // Get user's profile info
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name, email')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        // Check if lecturer profile already exists
+        const { data: existingLecturer } = await supabase
+          .from('lecturers')
+          .select('id')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        if (!existingLecturer) {
+          // Create lecturer profile
+          const { error: lecturerError } = await supabase
+            .from('lecturers')
+            .insert({
+              user_id: userId,
+              name: profile?.display_name || 'New Lecturer',
+              email: profile?.email || null,
+            });
+
+          if (lecturerError) throw lecturerError;
+        }
+      }
     },
     onSuccess: () => {
       toast({

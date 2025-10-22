@@ -191,6 +191,42 @@ const LecturerDashboard = () => {
     }
   };
 
+  const createLecturerProfileMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { data: userProfile } = await supabase
+        .from('profiles')
+        .select('display_name, email')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const { error } = await supabase
+        .from('lecturers')
+        .insert({
+          user_id: user.id,
+          name: userProfile?.display_name || 'New Lecturer',
+          email: userProfile?.email || null,
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Profile created",
+        description: "Your lecturer profile has been created successfully.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['lecturer-profile'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error creating profile",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   if (!profile) {
     return (
       <div className="space-y-6">
@@ -198,9 +234,15 @@ const LecturerDashboard = () => {
           <CardContent>
             <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Lecturer Profile Not Found</h3>
-            <p className="text-muted-foreground">
-              Your lecturer profile hasn't been created yet. Please contact the administrator.
+            <p className="text-muted-foreground mb-4">
+              Your lecturer profile hasn't been created yet. Click the button below to create it.
             </p>
+            <Button
+              onClick={() => createLecturerProfileMutation.mutate()}
+              disabled={createLecturerProfileMutation.isPending}
+            >
+              {createLecturerProfileMutation.isPending ? 'Creating...' : 'Create Lecturer Profile'}
+            </Button>
           </CardContent>
         </Card>
       </div>
