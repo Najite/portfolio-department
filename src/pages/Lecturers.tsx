@@ -3,6 +3,39 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Crown, Users } from 'lucide-react';
 import Header from '@/components/layout/Header';
 
+
+const HeadofDepartmentData = [
+  {
+    id: 1,
+    name: "MR AYONLOWO",
+    title: "HEAD OF DEPARTMENT",
+    profileImage: "/assets/lecturer1.jpg",
+    tenure: '2017/2019'
+  },
+  {
+    id: 2,
+    name: "DR MRS ALARAN",
+    title: "HEAD OF DEPARTMENT",
+    profileImage: "/assets/lecturer2.jpg",
+    tenure: '2019/2021'
+  },
+  {
+    id: 3,
+    name: "MR ADEBAYO",
+    title: "HEAD OF DEPARTMENT",
+    profileImage: "/assets/lecturer3.jpg",
+    tenure: '2021/2023'
+  },
+  {
+    id: 4,
+    name: "DR ORUNSOLU",
+    title: "HEAD OF DEPARTMENT",
+    profileImage: "/assets/lecturer4.jpg",
+    tenure: 'PRESENT'
+  }
+];
+
+
 const presidentsData = [
   {
     id: 1,
@@ -134,7 +167,78 @@ const Lecturers = () => {
       
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        
+              {/* HOD Section */}
+        <div className='text-center mb-16 relative'>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full mb-6">
+                  <Users className="h-4 w-4 text-accent" />
+                  <span className="text-sm font-medium text-accent">Academic Leadership</span>
+                </div>
+                <h1 className="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-accent via-accent/80 to-accent/60 bg-clip-text text-transparent">
+            Heads of Department
+          </h1>
+
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Distinguished academics who have led the Computer Science Department with vision and dedication,
+            fostering academic excellence and innovation.
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          {HeadofDepartmentData.map((hod, index) => (
+            <Card 
+              key={hod.id} 
+              className="group hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-accent/50 bg-card/50 backdrop-blur-sm overflow-hidden"
+            >
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <CardHeader className="text-center pb-3 relative">
+                  {/* Tenure Badge */}
+                <div className="absolute top-4 right-4 bg-accent/10 text-accent px-2 py-1 rounded-full text-xs font-bold">
+                  {hod.tenure}
+                </div>
+
+                <div className="relative inline-block">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-500 opacity-50 group-hover:opacity-100" />
+                  <img
+                    src={hod.profileImage}
+                    alt={hod.name}
+                    className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-background shadow-lg relative z-10 group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      e.target.outerHTML = '<div class="w-32 h-32 rounded-full mx-auto mb-4 bg-gradient-to-br from-accent/30 to-primary/30 flex items-center justify-center border-4 border-background shadow-lg relative z-10"><svg class="w-14 h-14 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div>';
+                    }}
+                  />
+                </div>
+
+                <CardTitle className="text-xl group-hover:text-accent transition-colors duration-300 relative z-10">
+                  {hod.name}
+                </CardTitle>
+                <CardDescription className="text-sm font-medium relative z-10">
+                  {hod.title}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center pb-6 relative z-10">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/5 group-hover:bg-accent/10 rounded-lg transition-colors duration-300">
+                  <Calendar className="h-4 w-4 text-accent" />
+                  <span className="text-sm font-semibold">{hod.tenure === 'PRESENT' ? 'Current HOD' : `Tenure: ${hod.tenure}`}</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+
+         {/* Divider */}
+        <div className="relative my-20">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t-2 border-gradient"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-background px-6 py-2 text-sm text-muted-foreground font-medium rounded-full border-2">
+              Student Leadership
+            </span>
+          </div>
+        </div>
+
+                {/* NACOS Presidents Hero Section */}   
         <div className="text-center mb-20 relative">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
             <Crown className="h-4 w-4 text-primary" />
