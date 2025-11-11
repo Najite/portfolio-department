@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Upload, FileText, GraduationCap, User, Save } from 'lucide-react';
+import { Plus, Upload, GraduationCap, User, Save, ExternalLink } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,11 +25,7 @@ const StudentDashboard = () => {
   const [paperData, setPaperData] = useState({
     title: '',
     abstract: '',
-    authors: '',
-    keywords: '',
-    journal_or_conference: '',
-    publication_date: '',
-    supervisor_id: '',
+    file_url: '',
   });
 
   // Fetch student profile
@@ -51,7 +46,7 @@ const StudentDashboard = () => {
   });
 
   // Update profile data when profile is loaded
-  useState(() => {
+  useEffect(() => {
     if (profile) {
       setProfileData({
         display_name: profile.display_name || '',
@@ -60,20 +55,6 @@ const StudentDashboard = () => {
     }
   }, [profile]);
 
-  // Fetch lecturers for supervisor selection
-  const { data: lecturers } = useQuery({
-    queryKey: ['lecturers'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('lecturers')
-        .select('id, name')
-        .order('name');
-      
-      if (error) throw error;
-      return data;
-    },
-  });
-
   // Fetch student papers
   const { data: papers } = useQuery({
     queryKey: ['student-papers', user?.id],
@@ -81,7 +62,7 @@ const StudentDashboard = () => {
       if (!user) return [];
       const { data, error } = await supabase
         .from('student_papers')
-        .select('*, lecturers(name)')
+        .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       
@@ -137,11 +118,8 @@ const StudentDashboard = () => {
           user_id: user.id,
           title: data.title,
           abstract: data.abstract,
-          authors: data.authors.split(',').map(a => a.trim()).filter(a => a),
-          keywords: data.keywords.split(',').map(k => k.trim()).filter(k => k),
-          journal_or_conference: data.journal_or_conference || null,
-          publication_date: data.publication_date || null,
-          supervisor_id: data.supervisor_id || null,
+          file_url: data.file_url || null,
+          authors: [profileData.display_name || 'Anonymous'],
           approval_status: 'pending',
         });
 
@@ -155,11 +133,7 @@ const StudentDashboard = () => {
       setPaperData({
         title: '',
         abstract: '',
-        authors: '',
-        keywords: '',
-        journal_or_conference: '',
-        publication_date: '',
-        supervisor_id: '',
+        file_url: '',
       });
       setShowPaperForm(false);
       queryClient.invalidateQueries({ queryKey: ['student-papers'] });
@@ -257,148 +231,97 @@ const StudentDashboard = () => {
             </div>
 
             {showPaperForm && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Submit Research Paper</CardTitle>
-              <CardDescription>
-                Submit your research paper for approval by the department
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={paperData.title}
-                  onChange={(e) => setPaperData({ ...paperData, title: e.target.value })}
-                  placeholder="Enter paper title"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="abstract">Abstract</Label>
-                <Textarea
-                  id="abstract"
-                  value={paperData.abstract}
-                  onChange={(e) => setPaperData({ ...paperData, abstract: e.target.value })}
-                  placeholder="Enter paper abstract"
-                  rows={4}
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="authors">Authors (comma-separated)</Label>
-                  <Input
-                    id="authors"
-                    value={paperData.authors}
-                    onChange={(e) => setPaperData({ ...paperData, authors: e.target.value })}
-                    placeholder="Your Name, Co-author"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="keywords">Keywords (comma-separated)</Label>
-                  <Input
-                    id="keywords"
-                    value={paperData.keywords}
-                    onChange={(e) => setPaperData({ ...paperData, keywords: e.target.value })}
-                    placeholder="machine learning, AI"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="journal">Journal/Conference</Label>
-                  <Input
-                    id="journal"
-                    value={paperData.journal_or_conference}
-                    onChange={(e) => setPaperData({ ...paperData, journal_or_conference: e.target.value })}
-                    placeholder="Journal name or conference"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="date">Publication Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={paperData.publication_date}
-                    onChange={(e) => setPaperData({ ...paperData, publication_date: e.target.value })}
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="supervisor">Supervisor (Optional)</Label>
-                <Select 
-                  value={paperData.supervisor_id} 
-                  onValueChange={(value) => setPaperData({ ...paperData, supervisor_id: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your supervisor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {lecturers?.map((lecturer) => (
-                      <SelectItem key={lecturer.id} value={lecturer.id}>
-                        {lecturer.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex gap-2">
-                <Button 
-                  onClick={() => uploadPaperMutation.mutate(paperData)}
-                  disabled={uploadPaperMutation.isPending || !paperData.title || !paperData.abstract}
-                >
-                  <Upload className="h-4 w-4 mr-2" />
-                  {uploadPaperMutation.isPending ? 'Submitting...' : 'Submit Paper'}
-                </Button>
-                <Button variant="outline" onClick={() => setShowPaperForm(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Submit Research Paper</CardTitle>
+                  <CardDescription>
+                    Submit your research paper for approval by the department
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="title">Journal/Paper Title</Label>
+                    <Input
+                      id="title"
+                      value={paperData.title}
+                      onChange={(e) => setPaperData({ ...paperData, title: e.target.value })}
+                      placeholder="Enter journal or paper title"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="abstract">Abstract</Label>
+                    <Textarea
+                      id="abstract"
+                      value={paperData.abstract}
+                      onChange={(e) => setPaperData({ ...paperData, abstract: e.target.value })}
+                      placeholder="Enter paper abstract"
+                      rows={6}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="file_url">Paper Link (URL)</Label>
+                    <Input
+                      id="file_url"
+                      type="url"
+                      value={paperData.file_url}
+                      onChange={(e) => setPaperData({ ...paperData, file_url: e.target.value })}
+                      placeholder="https://example.com/paper.pdf or https://doi.org/..."
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Provide a link to your paper (e.g., Google Drive, DOI, journal website)
+                    </p>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => uploadPaperMutation.mutate(paperData)}
+                      disabled={uploadPaperMutation.isPending || !paperData.title || !paperData.abstract}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {uploadPaperMutation.isPending ? 'Submitting...' : 'Submit Paper'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowPaperForm(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             {/* Papers List */}
             <div className="grid gap-4">
               {papers?.map((paper) => (
-            <Card key={paper.id}>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="mb-2">{paper.title}</CardTitle>
-                    <CardDescription>
-                      By: {paper.authors?.join(', ')}
-                      {paper.lecturers?.name && ` • Supervisor: ${paper.lecturers.name}`}
-                    </CardDescription>
-                  </div>
-                  {getStatusBadge(paper.approval_status || 'pending')}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {paper.abstract}
-                </p>
-                {paper.journal_or_conference && (
-                  <p className="text-sm font-medium mb-2">
-                    Published in: {paper.journal_or_conference}
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-2">
-                  {paper.keywords?.map((keyword) => (
-                    <Badge key={keyword} variant="outline" className="text-xs">
-                      {keyword}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                <Card key={paper.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="mb-2">{paper.title}</CardTitle>
+                        <CardDescription>
+                          Submitted on: {new Date(paper.created_at).toLocaleDateString()}
+                        </CardDescription>
+                      </div>
+                      {getStatusBadge(paper.approval_status || 'pending')}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {paper.abstract}
+                    </p>
+                    {paper.file_url && (
+                      <a 
+                        href={paper.file_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-sm text-primary hover:underline"
+                      >
+                        <ExternalLink className="h-4 w-4 mr-1" />
+                        View Paper
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
               ))}
           
               {papers?.length === 0 && (

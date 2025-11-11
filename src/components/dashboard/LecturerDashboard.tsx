@@ -22,19 +22,12 @@ const LecturerDashboard = () => {
   const [paperData, setPaperData] = useState({
     title: '',
     abstract: '',
-    authors: '',
-    keywords: '',
-    journal_or_conference: '',
-    publication_date: '',
+    file_url: '',
   });
   const [projectData, setProjectData] = useState({
     title: '',
     description: '',
-    technologies: '',
-    team_members: '',
-    github_url: '',
-    project_url: '',
-    start_date: '',
+    file_url: '',
   });
 
   // Fetch lecturer profile
@@ -98,10 +91,8 @@ const LecturerDashboard = () => {
           lecturer_id: profile.id,
           title: data.title,
           abstract: data.abstract,
-          authors: data.authors.split(',').map(a => a.trim()).filter(a => a),
-          keywords: data.keywords.split(',').map(k => k.trim()).filter(k => k),
-          journal_or_conference: data.journal_or_conference || null,
-          publication_date: data.publication_date || null,
+          file_url: data.file_url || null,
+          authors: [],
           approval_status: 'pending',
         });
 
@@ -115,10 +106,7 @@ const LecturerDashboard = () => {
       setPaperData({
         title: '',
         abstract: '',
-        authors: '',
-        keywords: '',
-        journal_or_conference: '',
-        publication_date: '',
+        file_url: '',
       });
       setShowPaperForm(false);
       queryClient.invalidateQueries({ queryKey: ['lecturer-papers'] });
@@ -142,11 +130,7 @@ const LecturerDashboard = () => {
         .insert({
           title: data.title,
           description: data.description,
-          technologies: data.technologies.split(',').map(t => t.trim()).filter(t => t),
-          team_members: data.team_members.split(',').map(m => m.trim()).filter(m => m),
-          github_url: data.github_url || null,
-          project_url: data.project_url || null,
-          start_date: data.start_date || null,
+          image_url: data.file_url || null,
           approval_status: 'pending',
         });
 
@@ -160,11 +144,7 @@ const LecturerDashboard = () => {
       setProjectData({
         title: '',
         description: '',
-        technologies: '',
-        team_members: '',
-        github_url: '',
-        project_url: '',
-        start_date: '',
+        file_url: '',
       });
       setShowProjectForm(false);
       queryClient.invalidateQueries({ queryKey: ['lecturer-projects'] });
@@ -285,12 +265,12 @@ const LecturerDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="title">Title</Label>
+                    <Label htmlFor="title">Journal Title</Label>
                     <Input
                       id="title"
                       value={paperData.title}
                       onChange={(e) => setPaperData({ ...paperData, title: e.target.value })}
-                      placeholder="Enter paper title"
+                      placeholder="Enter journal title"
                     />
                   </div>
                   
@@ -301,52 +281,22 @@ const LecturerDashboard = () => {
                       value={paperData.abstract}
                       onChange={(e) => setPaperData({ ...paperData, abstract: e.target.value })}
                       placeholder="Enter paper abstract"
-                      rows={4}
+                      rows={6}
                     />
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="authors">Authors (comma-separated)</Label>
-                      <Input
-                        id="authors"
-                        value={paperData.authors}
-                        onChange={(e) => setPaperData({ ...paperData, authors: e.target.value })}
-                        placeholder="John Doe, Jane Smith"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="keywords">Keywords (comma-separated)</Label>
-                      <Input
-                        id="keywords"
-                        value={paperData.keywords}
-                        onChange={(e) => setPaperData({ ...paperData, keywords: e.target.value })}
-                        placeholder="machine learning, AI"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="journal">Journal/Conference</Label>
-                      <Input
-                        id="journal"
-                        value={paperData.journal_or_conference}
-                        onChange={(e) => setPaperData({ ...paperData, journal_or_conference: e.target.value })}
-                        placeholder="Nature, IEEE, ACM"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="date">Publication Date</Label>
-                      <Input
-                        id="date"
-                        type="date"
-                        value={paperData.publication_date}
-                        onChange={(e) => setPaperData({ ...paperData, publication_date: e.target.value })}
-                      />
-                    </div>
+                  <div>
+                    <Label htmlFor="file_url">File URL</Label>
+                    <Input
+                      id="file_url"
+                      type="url"
+                      value={paperData.file_url}
+                      onChange={(e) => setPaperData({ ...paperData, file_url: e.target.value })}
+                      placeholder="https://example.com/paper.pdf"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Enter the URL where your paper is hosted (e.g., Google Drive, Dropbox)
+                    </p>
                   </div>
                   
                   <div className="flex gap-2">
@@ -374,23 +324,27 @@ const LecturerDashboard = () => {
                       <div>
                         <CardTitle className="mb-2">{paper.title}</CardTitle>
                         <CardDescription>
-                          {paper.authors?.join(', ')} • {paper.journal_or_conference}
+                          Submitted on {new Date(paper.created_at).toLocaleDateString()}
                         </CardDescription>
                       </div>
                       {getStatusBadge(paper.approval_status || 'pending')}
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    <p className="text-sm text-muted-foreground mb-4">
                       {paper.abstract}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {paper.keywords?.map((keyword) => (
-                        <Badge key={keyword} variant="outline" className="text-xs">
-                          {keyword}
-                        </Badge>
-                      ))}
-                    </div>
+                    {paper.file_url && (
+                      <a 
+                        href={paper.file_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline flex items-center gap-1"
+                      >
+                        <Upload className="h-3 w-3" />
+                        View Paper
+                      </a>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -435,7 +389,7 @@ const LecturerDashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="project-title">Title</Label>
+                    <Label htmlFor="project-title">Project Title</Label>
                     <Input
                       id="project-title"
                       value={projectData.title}
@@ -451,62 +405,22 @@ const LecturerDashboard = () => {
                       value={projectData.description}
                       onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
                       placeholder="Enter project description"
-                      rows={4}
+                      rows={6}
                     />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="technologies">Technologies (comma-separated)</Label>
-                      <Input
-                        id="technologies"
-                        value={projectData.technologies}
-                        onChange={(e) => setProjectData({ ...projectData, technologies: e.target.value })}
-                        placeholder="React, Node.js, Python"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="team">Team Members (comma-separated)</Label>
-                      <Input
-                        id="team"
-                        value={projectData.team_members}
-                        onChange={(e) => setProjectData({ ...projectData, team_members: e.target.value })}
-                        placeholder="John Doe, Jane Smith"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="github">GitHub URL</Label>
-                      <Input
-                        id="github"
-                        value={projectData.github_url}
-                        onChange={(e) => setProjectData({ ...projectData, github_url: e.target.value })}
-                        placeholder="https://github.com/username/repo"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="project-url">Project URL</Label>
-                      <Input
-                        id="project-url"
-                        value={projectData.project_url}
-                        onChange={(e) => setProjectData({ ...projectData, project_url: e.target.value })}
-                        placeholder="https://project-demo.com"
-                      />
-                    </div>
                   </div>
                   
                   <div>
-                    <Label htmlFor="start-date">Start Date</Label>
+                    <Label htmlFor="project-file-url">File URL</Label>
                     <Input
-                      id="start-date"
-                      type="date"
-                      value={projectData.start_date}
-                      onChange={(e) => setProjectData({ ...projectData, start_date: e.target.value })}
+                      id="project-file-url"
+                      type="url"
+                      value={projectData.file_url}
+                      onChange={(e) => setProjectData({ ...projectData, file_url: e.target.value })}
+                      placeholder="https://example.com/project-document.pdf"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Enter the URL where your project document is hosted
+                    </p>
                   </div>
                   
                   <div className="flex gap-2">
@@ -534,23 +448,27 @@ const LecturerDashboard = () => {
                       <div>
                         <CardTitle className="mb-2">{project.title}</CardTitle>
                         <CardDescription>
-                          Team: {project.team_members?.join(', ')}
+                          Submitted on {new Date(project.created_at).toLocaleDateString()}
                         </CardDescription>
                       </div>
                       {getStatusBadge(project.approval_status || 'pending')}
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    <p className="text-sm text-muted-foreground mb-4">
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies?.map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
+                    {project.image_url && (
+                      <a 
+                        href={project.image_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline flex items-center gap-1"
+                      >
+                        <Upload className="h-3 w-3" />
+                        View Project Document
+                      </a>
+                    )}
                   </CardContent>
                 </Card>
               ))}
